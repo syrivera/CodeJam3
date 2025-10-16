@@ -3,10 +3,6 @@ using CodeJam3b.Models.Movies;
 using CodeJam3b.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-using 
-
-using CodeJam3b.Models.Users;
-using CodeJam3b.Models.Lists;
 namespace CodeJam3b.Models.Movies;
 
 
