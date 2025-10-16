@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 public static class Program
 {
     public static void Main()
     {
-
         using (var db = new SchoolDbContext())
         {
             if (!db.Database.CanConnect())
@@ -13,186 +14,153 @@ public static class Program
                 return;
             }
 
-            // TODO: Write your first EF query
-
-            //var students = db.Students.ToList();
-
-            //foreach (var student in students)
-            //{
-            //    Console.WriteLine($"{student.FirstName} {student.LastName}");
-            //}
-
+            Console.WriteLine("Connected to database.");
+            Console.WriteLine($"Movies: {db.Movies.Count()}, Users: {db.Users.Count()}");
         }
 
-        // You'll un-comment this later
-        HandleCommandInput();
+        RunCli();
     }
 
-    static void HandleCommandInput()
+    static void RunCli()
     {
         var exit = false;
         do
         {
-            Console.Write("SIS database> ");
-            var input = (Console.ReadLine() ?? "").Split(" ");
-            switch (input)
+            Console.Write("MoviesDB> ");
+            var input = (Console.ReadLine() ?? "").Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (input.Length == 0) continue;
+
+            switch (input[0].ToLowerInvariant())
             {
-                case ["quit"]:
+                case "quit":
+                case "exit":
                     exit = true;
-                    Console.WriteLine("Quitting...");
                     break;
-                case ["student", var github]:
-                    GetStudentByGitHub(github);
+                case "list_movies":
+                    ListMovies();
                     break;
-                case ["new_student", var firstName, var lastName, var github]:
-                    AddStudent(firstName, lastName, github);
+                case "get_movie":
+                    if (input.Length >= 2) GetMovieById(input[1]);
+                    else Console.WriteLine("Usage: get_movie <id>");
                     break;
-                case ["assignment", .. var name]:
-                    GetAssignmentByName(string.Join(" ", name));
+                case "list_users":
+                    ListUsers();
                     break;
-                case ["assign_grade", var github, .. var name, var rawScore]:
-                    try
+                case "get_user":
+                    if (input.Length >= 2) GetUserById(input[1]);
+                    else Console.WriteLine("Usage: get_user <user_id>");
+                    break;
+                case "add_movie":
+                    // add_movie <id> <name> <releaseYear> <genre> <durationMins> <avgRating>
+                    if (input.Length >= 7)
                     {
-                        var score = int.Parse(rawScore);
-                        AssignGrade(github, string.Join(" ", name), score);
+                        AddMovie(input[1], input[2], input[3], input[4], input[5], input[6]);
                     }
-                    catch
+                    else
                     {
-                        Console.WriteLine("Invalid score.");
+                        Console.WriteLine("Usage: add_movie <id> <name> <releaseYear> <genre> <durationMins> <avgRating>");
                     }
                     break;
-                case ["grade", var github, .. var name]:
-                    GetGradeByGitHubAndAssignment(github, string.Join(" ", name));
-                    break;
-                case [_]:
-                    Console.WriteLine("Invalid command (run command 'quit' to exit).");
+                default:
+                    Console.WriteLine("Unknown command. Available: list_movies, get_movie, list_users, get_user, add_movie, quit");
                     break;
             }
+
         } while (!exit);
     }
 
-    static void GetStudentByGitHub(string github)
+    static void ListMovies()
     {
         using (var db = new SchoolDbContext())
         {
-            var student = db.Students.FirstOrDefault(s => s.GitHub == github);
-            if (student != null)
+            var movies = db.Movies.OrderBy(m => m.Name).Take(50).ToList();
+            foreach (var m in movies)
             {
-                Console.WriteLine($"{student.FirstName} {student.LastName}");
-                Console.WriteLine($"Student ID: {student.StudentId}");
-                Console.WriteLine($"GitHub: {student.GitHub}");
-            }
-            else
-            {
-                Console.WriteLine("Student not found.");
+                Console.WriteLine($"{m.Id}\t{m.Name}\t{m.ReleaseYear}\t{m.Genre}");
             }
         }
     }
 
-    static void AddStudent(string firstName, string lastName, string github)
+    static void GetMovieById(string id)
     {
         using (var db = new SchoolDbContext())
         {
-            var newStudent = new Student
+            var movie = db.Movies.FirstOrDefault(m => m.Id == id);
+            if (movie == null)
             {
-                StudentId = 0,
-                FirstName = firstName,
-                LastName = lastName,
-                GitHub = github
+                Console.WriteLine("Movie not found.");
+                return;
+            }
+
+            Console.WriteLine($"Id: {movie.Id}");
+            Console.WriteLine($"Name: {movie.Name}");
+            Console.WriteLine($"Year: {movie.ReleaseYear}");
+            Console.WriteLine($"Genre: {movie.Genre}");
+            Console.WriteLine($"Duration: {movie.DurationMins}");
+            Console.WriteLine($"AvgRating: {movie.AvgRating}");
+        }
+    }
+
+    static void ListUsers()
+    {
+        using (var db = new SchoolDbContext())
+        {
+            var users = db.Users.OrderBy(u => u.Username).Take(50).ToList();
+            foreach (var u in users)
+            {
+                Console.WriteLine($"{u.UserId}\t{u.Username}\t{u.Email}");
+            }
+        }
+    }
+
+    static void GetUserById(string userId)
+    {
+        using (var db = new SchoolDbContext())
+        {
+            // userId here is the string 'id' column or the GUID user_id? We'll try matching both.
+            CodeJam3b.Models.Users.User? user = null;
+            if (Guid.TryParse(userId, out var guid))
+            {
+                user = db.Users.FirstOrDefault(u => u.UserId == guid);
+            }
+            if (user == null)
+            {
+                user = db.Users.FirstOrDefault(u => u.Id == userId);
+            }
+
+            if (user == null)
+            {
+                Console.WriteLine("User not found.");
+                return;
+            }
+
+            Console.WriteLine($"UserId: {user.UserId}");
+            Console.WriteLine($"Id: {user.Id}");
+            Console.WriteLine($"Username: {user.Username}");
+            Console.WriteLine($"Email: {user.Email}");
+            Console.WriteLine($"Bio: {user.Bio}");
+        }
+    }
+
+    static void AddMovie(string id, string name, string releaseYearRaw, string genre, string durationRaw, string avgRaw)
+    {
+        using (var db = new SchoolDbContext())
+        {
+            var movie = new CodeJam3b.Models.Movies.Movie
+            {
+                Id = id,
+                Name = name,
+                Genre = genre
             };
-            db.Add(newStudent);
+
+            if (int.TryParse(releaseYearRaw, out var ry)) movie.ReleaseYear = ry;
+            if (int.TryParse(durationRaw, out var dm)) movie.DurationMins = dm;
+            if (double.TryParse(avgRaw, out var ar)) movie.AvgRating = ar;
+
+            db.Movies.Add(movie);
             db.SaveChanges();
 
-            Console.WriteLine($"Successfully added student: {firstName} {lastName}");
-        }
-    }
-
-    static void GetAssignmentByName(string assignmentName)
-    {
-        using (var db = new SchoolDbContext())
-        {
-            var assignment = db.Assignments.FirstOrDefault(s => s.Name == assignmentName);
-            if (assignment != null)
-            {
-                Console.WriteLine($"{assignment.Name} {assignment.MaxScore}");
-
-            }
-            else
-            {
-                Console.WriteLine("Assignment not found.");
-            }
-        }
-    }
-
-    static void AssignGrade(string github, string assignmentName, int score)
-    {
-        using (var db = new SchoolDbContext())
-        {
-            // Find the student by GitHub username
-            var student = db.Students.FirstOrDefault(s => s.GitHub == github);
-            if (student == null)
-            {
-                Console.WriteLine($"Student with GitHub '{github}' not found.");
-                return;
-            }
-
-            // Find the assignment by name
-            var assignment = db.Assignments.FirstOrDefault(a => a.Name == assignmentName);
-            if (assignment == null)
-            {
-                Console.WriteLine($"Assignment '{assignmentName}' not found.");
-                return;
-            }
-
-            // Create and add the grade
-            var grade = new Grade
-            {
-                GradeId = 0,
-                StudentId = student.StudentId,
-                AssignmentId = assignment.AssignmentId,
-                Score = score
-            };
-
-            db.Grades.Add(grade);
-            db.SaveChanges();
-
-            Console.WriteLine($"Assigned grade {score} to {student.FirstName} {student.LastName} for '{assignmentName}'.");
-        }
-    }
-
-
-    static void GetGradeByGitHubAndAssignment(string github, string assignmentName)
-    {
-        using (var db = new SchoolDbContext())
-        {
-            // Find the student by GitHub username
-            var student = db.Students.FirstOrDefault(s => s.GitHub == github);
-            if (student == null)
-            {
-                Console.WriteLine($"Student with GitHub '{github}' not found.");
-                return;
-            }
-
-            // Find the assignment by name
-            var assignment = db.Assignments.FirstOrDefault(a => a.Name == assignmentName);
-            if (assignment == null)
-            {
-                Console.WriteLine($"Assignment '{assignmentName}' not found.");
-                return;
-            }
-
-            // Find the grade
-            var grade = db.Grades
-                .FirstOrDefault(g => g.StudentId == student.StudentId && g.AssignmentId == assignment.AssignmentId);
-
-            if (grade == null)
-            {
-                Console.WriteLine($"No grade found for {student.FirstName} on '{assignmentName}'.");
-            }
-            else
-            {
-                Console.WriteLine($"{student.FirstName} {student.LastName} scored {grade.Score} on '{assignmentName}'.");
-            }
+            Console.WriteLine($"Added movie {movie.Name} ({movie.Id})");
         }
     }
 }
