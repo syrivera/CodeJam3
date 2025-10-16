@@ -37,9 +37,10 @@ namespace CodeJam3b.Models.Users
         [Column("diary_id")]
         public string? DiaryId { get; set; }
 
-        // Navigation properties (optional)
-        public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
-        public CodeJam3b.Models.Lists.Watched? Watched { get; set; }
-        public CodeJam3b.Models.Lists.Diary? Diary { get; set; }
+    // Navigation properties (optional)
+    public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
+    // A user can have many Watched records
+    public System.Collections.Generic.ICollection<CodeJam3b.Models.Lists.Watched> Watched { get; set; } = new System.Collections.Generic.List<CodeJam3b.Models.Lists.Watched>();
+    public CodeJam3b.Models.Lists.Diary? Diary { get; set; }
     }
 }

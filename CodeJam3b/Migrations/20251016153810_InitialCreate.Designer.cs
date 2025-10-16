@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace CodeJam3b.Migrations
 {
-    [DbContext(typeof(SchoolDbContext))]
+    [DbContext(typeof(CodeJam3b.Models.Movies.LetterBoxDbContext))]
     [Migration("20251016153810_InitialCreate")]
     partial class InitialCreate
     {
