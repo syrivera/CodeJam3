@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using CodeJam3b.Models.Movies;
 using Microsoft.EntityFrameworkCore;
 
 public static class Program
 {
     public static void Main()
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             if (!db.Database.CanConnect())
             {
@@ -71,7 +72,7 @@ public static class Program
 
     static void ListMovies()
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             var movies = db.Movies.OrderBy(m => m.Name).Take(50).ToList();
             foreach (var m in movies)
@@ -83,7 +84,7 @@ public static class Program
 
     static void GetMovieById(string id)
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             var movie = db.Movies.FirstOrDefault(m => m.Id == id);
             if (movie == null)
@@ -103,7 +104,7 @@ public static class Program
 
     static void ListUsers()
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             var users = db.Users.OrderBy(u => u.Username).Take(50).ToList();
             foreach (var u in users)
@@ -115,7 +116,7 @@ public static class Program
 
     static void GetUserById(string userId)
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             // userId here is the string 'id' column or the GUID user_id? We'll try matching both.
             CodeJam3b.Models.Users.User? user = null;
@@ -144,7 +145,7 @@ public static class Program
 
     static void AddMovie(string id, string name, string releaseYearRaw, string genre, string durationRaw, string avgRaw)
     {
-        using (var db = new SchoolDbContext())
+        using (var db = new LetterBoxDbContext())
         {
             var movie = new CodeJam3b.Models.Movies.Movie
             {
