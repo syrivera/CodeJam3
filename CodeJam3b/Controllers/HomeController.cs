@@ -71,16 +71,24 @@ namespace LetterBoxDb.Controllers
 
         }
 
-        [Route("/movie")]
-        public IActionResult Movie()
+        [Route("/movie/{id}")]
+        public IActionResult Movie(string id)
         {
+            var movie = _db.Movies
+                .AsNoTracking()
+                .FirstOrDefault(m => m.Id == id);
 
+            if (movie == null)
+            {
+                return NotFound();
+            }
 
-            return View();
-
+            ViewData["Title"] = movie.Name;
+            return View(movie);
         }
 
-        [Route("/profile")]
+
+            [Route("/profile")]
         public IActionResult Profile()
         {
 
@@ -89,3 +97,4 @@ namespace LetterBoxDb.Controllers
 
     }
 }
+ 

@@ -14,7 +14,7 @@ namespace CodeJam3b.Models.Movies
         private readonly string _connectionHost = "localhost";
         private readonly string _connectionDbName;
 
-        public LetterBoxDbContext(string dbName = "letterbox")
+           internal LetterBoxDbContext(string dbName = "letterbox")
         {
             _connectionDbName = dbName;
         }
@@ -44,10 +44,10 @@ namespace CodeJam3b.Models.Movies
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Minimal fix: explicitly configure one-to-one relationship between User and Watched
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Watched)
-                .WithOne()
-                .HasForeignKey<Watched>(w => w.UserId);
+            modelBuilder.Entity<User>();
+           //     .HasOne(u => u.Watched)
+            //    .WithOne()
+          //      .HasForeignKey<Watched>(w => w.UserId);
             base.OnModelCreating(modelBuilder);
 
             // Table mapping (optional, adjust if your tables are named differently)

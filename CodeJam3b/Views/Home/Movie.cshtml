@@ -1,5 +1,208 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using CodeJam3b.Models.Movies
+@model Movie
+
 @{
+    ViewData["Title"] = Model.Name ?? "Movie Details";
+    var successMessage = TempData["SuccessMessage"] as string;
+}
+
+<div class="container mt-4">
+    <!-- Back Button -->
+    <div class="mb-3">
+        <a href="/dashboard" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Success Message -->
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @successMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Movie Details Card -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">@Model.Name</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 150px;">Release Year:</th>
+                                <td>@(Model.ReleaseYear?.ToString() ?? "N/A")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Genre:</th>
+                                <td>@(Model.Genre ?? "N/A")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Duration:</th>
+                                <td>@(Model.DurationMins != null ? $"{Model.DurationMins} minutes" : "N/A")</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Average Rating:</th>
+                                <td>
+                                    @if (Model.AvgRating != null)
+                                    {
+                                        <span class="badge bg-warning text-dark fs-6">
+                                            ⭐ @Model.AvgRating.Value.ToString("F1") / 5.0
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No ratings yet</span>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Form -->
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">Rate & Review</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="/movie/@Model.Id/submit" id="reviewForm">
+                <!-- Favorite/Like Button -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Add to Favorites</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               role="switch"
+                               id="isFavorite"
+                               name="isFavorite"
+                               value="true">
+                        <label class="form-check-label" for="isFavorite">
+                            <span id="favoriteLabel">❤️ Add to Favorites</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Rating System -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Your Rating *</label>
+                    <div class="rating-container">
+                        <div class="star-rating">
+                            @for (int i = 5; i >= 1; i--)
+                            {
+                                <input type="radio"
+                                       id="star@(i)"
+                                       name="rating"
+                                       value="@i"
+                                       required />
+                                <label for="star@(i)" title="@i stars">★</label>
+                            }
+                        </div>
+                        <div class="rating-text mt-2 text-muted">
+                            <small>Click to rate (1-5 stars)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review Text -->
+                <div class="mb-4">
+                    <label for="review" class="form-label fw-bold">Your Review</label>
+                    <textarea class="form-control"
+                              id="review"
+                              name="review"
+                              rows="5"
+                              placeholder="Share your thoughts about this movie..."></textarea>
+                    <small class="text-muted">Optional - Tell us what you think!</small>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Submit Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        /* Star Rating Styles */
+        .star-rating {
+            direction: rtl;
+            display: inline-flex;
+            font-size: 3rem;
+            line-height: 1;
+        }
+
+            .star-rating input[type="radio"] {
+                display: none;
+            }
+
+            .star-rating label {
+                color: #ddd;
+                cursor: pointer;
+                padding: 0 5px;
+                transition: color 0.2s;
+            }
+
+                .star-rating label:hover,
+                .star-rating label:hover ~ label,
+                .star-rating input[type="radio"]:checked ~ label {
+                    color: #ffc107;
+                }
+
+        /* Favorite Toggle */
+        .form-check-input:checked {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        /* Card Styling */
+        .card {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .card-header {
+            font-weight: 600;
+        }
+
+        /* Table Styling */
+        .table-borderless th {
+            font-weight: 600;
+            color: #495057;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script>
+        // Update favorite label when toggled
+        document.getElementById('isFavorite').addEventListener('change', function() {
+            const label = document.getElementById('favoriteLabel');
+            if (this.checked) {
+                label.textContent = '💖 Added to Favorites';
+            } else {
+                label.textContent = '❤️ Add to Favorites';
+            }
+        });
+
+        // Show selected rating
+        document.querySelectorAll('.star-rating input[type="radio"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                const ratingText = document.querySelector('.rating-text small');
+                ratingText.textContent = `You rated this ${this.value} star${this.value > 1 ? 's' : ''}`;
+                ratingText.style.color = '#ffc107';
+                ratingText.style.fontWeight = 'bold';
+            });
+        });
+    </script>
 }
