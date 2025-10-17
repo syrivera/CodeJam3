@@ -9,7 +9,7 @@ namespace CodeJam3b.Models.Movies
     {
         [Key]
         [Column("id")]
-        public required string Id { get; set; }
+        public string Id { get; set; } // from CSV
 
         [Column("name")]
         public string? Name { get; set; }
@@ -26,9 +26,8 @@ namespace CodeJam3b.Models.Movies
         [Column("avg_rating")]
         public double? AvgRating { get; set; }
 
-        // rating_id is a uuid referencing Ratings.id
         [Column("rating_id")]
-        public Guid? RatingId { get; set; }
+        public int? RatingId { get; set; }
         public Rating? Rating { get; set; }
     }
 }

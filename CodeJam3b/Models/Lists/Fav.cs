@@ -6,9 +6,9 @@ namespace CodeJam3b.Models.Lists
     [Table("fav")]
     public class Fav
     {
-        [Key]
-        [Column("fav_id")]
-        public required string FavId { get; set; }
+    [Key]
+    [Column("fav_id")]
+    public string FavId { get; set; } = null!;
 
         [Column("movie_id")]
         public string? MovieId { get; set; }

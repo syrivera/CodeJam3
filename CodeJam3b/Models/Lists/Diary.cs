@@ -8,7 +8,7 @@ namespace CodeJam3b.Models.Lists
     {
     [Key]
     [Column("diary_id")]
-    public required string DiaryId { get; set; }
+    public string DiaryId { get; set; } = null!;
 
     [Column("movie_id")]
     public string? MovieId { get; set; }

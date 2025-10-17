@@ -7,12 +7,12 @@ namespace CodeJam3b.Models.Lists
     [Table("watchlist")]
     public class Watchlist
     {
-        [Key]
-        [Column("watchlist_id")]
-        public required string WatchlistId { get; set; }
+    [Key]
+    [Column("watchlist_id")]
+    public string WatchlistId { get; set; } = null!;
 
-        [Column("id")]
-        public Guid? Id { get; set; }
+    [Column("id")]
+    public string? Id { get; set; }
 
         [Column("movie_id")]
         public string? MovieId { get; set; }
