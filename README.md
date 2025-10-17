@@ -1,6 +1,12 @@
 
+<div align="center">
+  <img src="https://a.ltrbxd.com/logos/letterboxd-logo-h-pos-rgb-1000px.png" alt="Letterboxd" width="200"/>
+  <br>
+  <sub>follow me <a href="https://letterboxd.com/samsclub1/">@samsclub1</a></sub>
+</div>
 
-# Letterbox 2.0
+
+## Letterbox 2.0
 
 ASP.NET Core web app for tracking movies, users, ratings, and lists. Uses PostgreSQL and Razor Pages.
 
