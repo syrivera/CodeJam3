@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CodeJam3b.Models.Users
 {
-    [Table("user")]
+    [Table("users")]
     public class User
     {
         // Primary key: user_id (uuid)

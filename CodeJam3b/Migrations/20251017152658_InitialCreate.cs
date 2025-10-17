@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -47,8 +45,7 @@ namespace CodeJam3b.Migrations
                     genre = table.Column<string>(type: "text", nullable: true),
                     duration_mins = table.Column<int>(type: "integer", nullable: true),
                     avg_rating = table.Column<double>(type: "double precision", nullable: true),
-                    rating_id = table.Column<Guid>(type: "uuid", nullable: true),
-                    RatingId1 = table.Column<string>(type: "text", nullable: true)
+                    rating_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -80,7 +77,7 @@ namespace CodeJam3b.Migrations
                 columns: table => new
                 {
                     watchlist_id = table.Column<string>(type: "text", nullable: false),
-                    id = table.Column<Guid>(type: "uuid", nullable: true),
+                    id = table.Column<string>(type: "text", nullable: true),
                     movie_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -94,36 +91,35 @@ namespace CodeJam3b.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "user",
+                name: "users",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     id = table.Column<string>(type: "text", nullable: true),
                     username = table.Column<string>(type: "text", nullable: true),
                     email = table.Column<string>(type: "text", nullable: true),
                     bio = table.Column<string>(type: "text", nullable: true),
                     watched_id = table.Column<string>(type: "text", nullable: true),
-                    WatchedGuidId = table.Column<Guid>(type: "uuid", nullable: true),
-                    list_id = table.Column<Guid>(type: "uuid", nullable: true),
+                    list_id = table.Column<string>(type: "text", nullable: true),
                     watchlist_id = table.Column<string>(type: "text", nullable: true),
-                    diary_id = table.Column<string>(type: "text", nullable: true)
+                    diary_id = table.Column<string>(type: "text", nullable: true),
+                    WatchedId1 = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_user", x => x.user_id);
+                    table.PrimaryKey("PK_users", x => x.user_id);
                     table.ForeignKey(
-                        name: "FK_user_diary_diary_id",
+                        name: "FK_users_diary_diary_id",
                         column: x => x.diary_id,
                         principalTable: "diary",
                         principalColumn: "diary_id");
                     table.ForeignKey(
-                        name: "FK_user_watched_watched_id",
-                        column: x => x.watched_id,
+                        name: "FK_users_watched_WatchedId1",
+                        column: x => x.WatchedId1,
                         principalTable: "watched",
                         principalColumn: "id");
                     table.ForeignKey(
-                        name: "FK_user_watchlist_watchlist_id",
+                        name: "FK_users_watchlist_watchlist_id",
                         column: x => x.watchlist_id,
                         principalTable: "watchlist",
                         principalColumn: "watchlist_id");
@@ -136,7 +132,6 @@ namespace CodeJam3b.Migrations
                     id = table.Column<string>(type: "text", nullable: false),
                     rating_id = table.Column<string>(type: "text", nullable: true),
                     user_id = table.Column<string>(type: "text", nullable: true),
-                    UserId1 = table.Column<int>(type: "integer", nullable: true),
                     review = table.Column<string>(type: "text", nullable: true),
                     movie_name = table.Column<string>(type: "text", nullable: true),
                     stars = table.Column<int>(type: "integer", nullable: true)
@@ -145,9 +140,9 @@ namespace CodeJam3b.Migrations
                 {
                     table.PrimaryKey("PK_ratings", x => x.id);
                     table.ForeignKey(
-                        name: "FK_ratings_user_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "user",
+                        name: "FK_ratings_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
                         principalColumn: "user_id");
                 });
 
@@ -167,29 +162,28 @@ namespace CodeJam3b.Migrations
                 column: "movie_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_movies_RatingId1",
+                name: "IX_movies_rating_id",
                 table: "movies",
-                column: "RatingId1");
+                column: "rating_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ratings_UserId1",
+                name: "IX_ratings_user_id",
                 table: "ratings",
-                column: "UserId1");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_user_diary_id",
-                table: "user",
+                name: "IX_users_diary_id",
+                table: "users",
                 column: "diary_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_user_watched_id",
-                table: "user",
-                column: "watched_id",
-                unique: true);
+                name: "IX_users_WatchedId1",
+                table: "users",
+                column: "WatchedId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_user_watchlist_id",
-                table: "user",
+                name: "IX_users_watchlist_id",
+                table: "users",
                 column: "watchlist_id");
 
             migrationBuilder.CreateIndex(
@@ -224,9 +218,9 @@ namespace CodeJam3b.Migrations
                 principalColumn: "id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_movies_ratings_RatingId1",
+                name: "FK_movies_ratings_rating_id",
                 table: "movies",
-                column: "RatingId1",
+                column: "rating_id",
                 principalTable: "ratings",
                 principalColumn: "id");
         }
@@ -260,7 +254,7 @@ namespace CodeJam3b.Migrations
                 name: "ratings");
 
             migrationBuilder.DropTable(
-                name: "user");
+                name: "users");
 
             migrationBuilder.DropTable(
                 name: "diary");

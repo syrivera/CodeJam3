@@ -2,36 +2,178 @@
 @model List<Movie>
 
 @{
-    var q = ViewData["Query"] as string ?? "";
-    var pages = (int)ViewData["Page"];
-    var totalPages = (int)ViewData["TotalPages"];
+    ViewData["Title"] = "Movie Dashboard";
+    var query = ViewData["Query"] as string ?? "";
+    var currentPage = (int)(ViewData["Page"] ?? 1);
+    var totalPages = (int)(ViewData["TotalPages"] ?? 1);
+    var totalCount = (int)(ViewData["TotalCount"] ?? 0);
 }
 
-<h1>Dashboard</h1>
+<div class="container mt-4">
+    <h1 class="mb-4">Movie Dashboard</h1>
 
-Dashboard
-    <input type="text" name="q" value="@q" placeholder="Search movies..." />
-    <button type="submit">Search</button>
-</form>
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-md-8 col-lg-6">
+            <form method="get" action="/dashboard" class="d-flex gap-2">
+                <input type="text"
+                       name="q"
+                       class="form-control"
+                       placeholder="Search movies..."
+                       value="@query"
+                       autofocus />
+                <button type="submit" class="btn btn-primary">Search</button>
+                @if (!string.IsNullOrEmpty(query))
+                {
+                    <a href="/dashboard" class="btn btn-secondary">Clear</a>
+                }
+            </form>
+        </div>
+    </div>
 
-<p>Query: @q</p>
-<p>Page @pages of @totalPages</p>
+    <!-- Results Summary -->
+    <div class="mb-3">
+        @if (!string.IsNullOrEmpty(query))
+        {
+            <p class="text-muted">Found <strong>@totalCount</strong> results for "<strong>@query</strong>"</p>
+        }
+        else
+        {
+            <p class="text-muted">Showing <strong>@totalCount</strong> movies</p>
+        }
+    </div>
 
-<ul>
-@foreach (var item in Model)
-{
-    <li>@item.Name</li>
-}
-</ul>
-
-<div>
-    @if (page > 1)
+    <!-- Movies List -->
+    @if (Model != null && Model.Any())
     {
-        @Url.Action(Previous</a>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var movie in Model)
+                    {
+                        <tr>
+                            <td>@movie.Id</td>
+                            <td>@movie.Name</td>
+                            <td>
+                                <a href="/movie/@movie.Id" class="btn btn-sm btn-info">View</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages > 1)
+        {
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    <!-- Previous Button -->
+                    <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                        <a class="page-link"
+                           href="/dashboard?q=@Uri.EscapeDataString(query)&page=@(currentPage - 1)">
+                            Previous
+                        </a>
+                    </li>
+
+                    @{
+                        // Calculate page range to show
+                        int startPage = Math.Max(1, currentPage - 2);
+                        int endPage = Math.Min(totalPages, currentPage + 2);
+
+                        // Adjust if we're near the start or end
+                        if (currentPage <= 3)
+                        {
+                            endPage = Math.Min(5, totalPages);
+                        }
+                        if (currentPage > totalPages - 3)
+                        {
+                            startPage = Math.Max(1, totalPages - 4);
+                        }
+                    }
+
+                    <!-- First Page -->
+                    @if (startPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="/dashboard?q=@Uri.EscapeDataString(query)&page=1">1</a>
+                        </li>
+                        @if (startPage > 2)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                    }
+
+                    <!-- Page Numbers -->
+                    @for (int i = startPage; i <= endPage; i++)
+                    {
+                        <li class="page-item @(i == currentPage ? "active" : "")">
+                            <a class="page-link" href="/dashboard?q=@Uri.EscapeDataString(query)&page=@i">
+                                @i
+                            </a>
+                        </li>
+                    }
+
+                    <!-- Last Page -->
+                    @if (endPage < totalPages)
+                    {
+                        @if (endPage < totalPages - 1)
+                        {
+                            <li class="page-item disabled">
+                                <span class="page-link">...</span>
+                            </li>
+                        }
+                        <li class="page-item">
+                            <a class="page-link" href="/dashboard?q=@Uri.EscapeDataString(query)&page=@totalPages">@totalPages</a>
+                        </li>
+                    }
+
+                    <!-- Next Button -->
+                    <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                        <a class="page-link"
+                           href="/dashboard?q=@Uri.EscapeDataString(query)&page=@(currentPage + 1)">
+                            Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Page Info -->
+            <p class="text-center text-muted">
+                Page @currentPage of @totalPages
+            </p>
+        }
     }
-
-    @if (page < totalPages)
+    else
     {
-        <a hreftion(Next</a>
+        <div class="alert alert-info">
+            <p class="mb-0">No movies found. @(!string.IsNullOrEmpty(query) ? "Try a different search." : "")</p>
+        </div>
     }
 </div>
+
+@section Styles {
+    <style>
+        .pagination .page-link {
+            color: #007bff;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            cursor: not-allowed;
+        }
+    </style>
+}
