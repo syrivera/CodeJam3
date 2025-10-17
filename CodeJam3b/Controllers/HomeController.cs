@@ -199,7 +199,7 @@ namespace LetterBoxDb.Controllers
                 MovieId = id,
                 DiaryId = id
             };
-            Console.WriteLine(_db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).First());
+            Console.WriteLine(_db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).FirstOrDefault());
 
             _db.Watched.Add(newWatched);
 
