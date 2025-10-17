@@ -10,7 +10,7 @@ namespace CodeJam3b.Models.Movies
         // Primary key: id (uuid)
         [Key]
         [Column("id")]
-        public required Guid Id { get; set; }
+        public required string Id { get; set; }
 
         // rating_id also present in your schema (string)
         [Column("rating_id")]
