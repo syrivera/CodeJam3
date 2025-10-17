@@ -17,7 +17,12 @@ namespace LetterBoxDb.Controllers
             _logger = logger;
             _db = db;
         }
-
+        [Route("/")]
+        public IActionResult Index()
+        {
+            return RedirectToAction("Login");
+        }
+        
         [Route("/login")]
         public IActionResult Login(string name)
         {
