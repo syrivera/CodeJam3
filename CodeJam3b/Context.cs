@@ -10,13 +10,14 @@ public class LetterBoxDbContext(string dbName = "letterbox") : DbContext
     private readonly string _connectionHost = "localhost";
     private readonly string _connectionDbName = dbName;
 
-    public DbSet<Movie> Movies { get; set; }
-    public DbSet<Rating> Ratings { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Watchlist> Watchlist { get; set; }
-    public DbSet<Watched> Watched { get; set; }
-    public DbSet<Fav> Fav { get; set; }
-    public DbSet<Diary> Diary { get; set; }
+        // YOUR MODEL TYPES MUST EXIST IN THE PROJECT
+        public DbSet<Movie> Movies { get; set; } = null!;
+        public DbSet<Rating> Ratings { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+        public DbSet<Watchlist> Watchlist { get; set; } = null!;
+        public DbSet<Watched> Watched { get; set; } = null!;
+        public DbSet<Fav> Fav { get; set; } = null!;
+        public DbSet<Diary> Diary { get; set; } = null!;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
