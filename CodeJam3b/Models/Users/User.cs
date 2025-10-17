@@ -12,9 +12,6 @@ namespace CodeJam3b.Models.Users
         [Column("user_id")]
         public required string UserId { get; set; }
 
-        // external/string identifier
-        [Column("id")]
-        public string? Id { get; set; }
 
         [Column("username")]
         public string? Username { get; set; }
@@ -38,8 +35,8 @@ namespace CodeJam3b.Models.Users
         public string? DiaryId { get; set; }
 
         // Navigation properties (optional)
-        public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
-        public CodeJam3b.Models.Lists.Watched? Watched { get; set; }
-        public CodeJam3b.Models.Lists.Diary? Diary { get; set; }
+        //public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
+        //public CodeJam3b.Models.Lists.Watched? Watched { get; set; }
+        //public CodeJam3b.Models.Lists.Diary? Diary { get; set; }
     }
 }

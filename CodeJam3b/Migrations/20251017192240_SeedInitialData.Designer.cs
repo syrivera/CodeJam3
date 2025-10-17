@@ -2,6 +2,7 @@
 using CodeJam3b.Models.Movies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -10,9 +11,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CodeJam3b.Migrations
 {
     [DbContext(typeof(LetterBoxDbContext))]
-    partial class LetterBoxDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251017192240_SeedInitialData")]
+    partial class SeedInitialData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -477,10 +480,6 @@ namespace CodeJam3b.Migrations
 
             modelBuilder.Entity("CodeJam3b.Models.Movies.Rating", b =>
                 {
-                    b.Property<string>("RatingId")
-                        .HasColumnType("text")
-                        .HasColumnName("rating_id");
-
                     b.Property<string>("Id")
                         .HasColumnType("text")
                         .HasColumnName("id");
@@ -506,7 +505,7 @@ namespace CodeJam3b.Migrations
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
-                    b.HasKey("RatingId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 

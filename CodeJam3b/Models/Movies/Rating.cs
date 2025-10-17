@@ -12,9 +12,8 @@ namespace CodeJam3b.Models.Movies
         [Column("id")]
         public required string Id { get; set; }
 
-        // rating_id also present in your schema (string)
         [Column("rating_id")]
-        public string? RatingId { get; set; }
+        public required string RatingId { get; set; }
 
         [Column("user_id")]
         public string? UserId { get; set; }
