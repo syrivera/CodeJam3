@@ -19,10 +19,10 @@ ASP.NET Core web app for tracking movies, users, ratings, and lists. Uses Postgr
 	dotnet run
 	```
 3. Open your browser and go to:
-	- `http://localhost:5000/Dashboard` (main dashboard view)
-	- `http://localhost:5000/Login` (login view)
-	- `http://localhost:5000/Profile` (user profile)
-	- `http://localhost:5000/Movie` (movie details)
+	- `http://localhost:5147/Dashboard` (main dashboard view)
+	- `http://localhost:5147/Login` (login view)
+	- `http://localhost:5147/Profile` (user profile)
+	- `http://localhost:5147/Movie` (movie details)
 
 ## View Options
 - Dashboard: Overview of movies, users, ratings, lists
