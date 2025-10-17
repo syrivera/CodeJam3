@@ -1,4 +1,5 @@
 ﻿using CodeJam3b.Models.Movies;
+using CodeJam3b.Models.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
@@ -23,9 +24,23 @@ namespace LetterBoxDb.Controllers
         }
 
         [Route("/login")]
+        [HttpPost]
         public IActionResult Login(string name)
         {
+            User user = _dbContext.Users.FirstOrDefault(u => u.Username == name)!;
 
+            if (user != null)
+            {
+
+                return RedirectToAction("Dashboard", new 
+                { 
+                    id = user.UserId, 
+                    username = user.Username 
+                });
+            }
+
+            ViewBag.Error = "Invalid Username";
+            
             return View();
         }
 
@@ -81,8 +96,22 @@ namespace LetterBoxDb.Controllers
         }
 
         [Route("/profile")]
-        public IActionResult Profile()
+        public IActionResult Profile(Guid id)
         {
+            User user = _dbContext.Users.FirstOrDefault(u => u.UserId == id)!;
+
+            if (user == null)
+            {
+                ViewData["Error"] = "User not found";
+                return View();
+            }
+
+
+            ViewData["UserId"] = user.Id;
+            ViewData["Username"] = user.Username;
+            ViewData["Diary"] = user.Diary;
+            ViewData["WatchList"] = user.Watchlist;
+            //ViewData["Fav"] = user;
 
             return View();
         }
