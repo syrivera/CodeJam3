@@ -1,5 +1,55 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewData["Title"] = "User Profile";
+    var watched = ViewData["Watched"] as List<string>;
+    var favorites = ViewData["Favs"] as List<string>;
+    var watchlist = ViewData["Watchlist"] as List<string>;
 }
+
+<h2>Welcome, @ViewData["Username"]!</h2>
+
+<div>
+    <h3>Watched Movies</h3>
+    @if (watched != null && watched.Count > 0)
+    {
+        <ul>
+            @foreach (var movie in watched)
+            {
+                <li>@movie</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No watched movies yet.</p>
+    }
+
+    <h3>Favorite Movies</h3>
+    @if (favorites != null && favorites.Count > 0)
+    {
+        <ul>
+            @foreach (var movie in favorites)
+            {
+                <li>@movie</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No favorites yet.</p>
+    }
+
+  @*   <h3>Watchlist</h3>
+    @if (watchlist != null && watchlist.Count > 0)
+    {
+        <ul>
+            @foreach (var movie in watchlist)
+            {
+                <li>@movie</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>Watchlist is empty.</p>
+    } *@
+</div>

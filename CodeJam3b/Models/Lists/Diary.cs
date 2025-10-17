@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,6 +8,9 @@ namespace CodeJam3b.Models.Lists
     public class Diary
     {
     [Key]
+    [Column("id")]
+    public required string Id { get; set; }
+
     [Column("diary_id")]
     public required string DiaryId { get; set; }
 

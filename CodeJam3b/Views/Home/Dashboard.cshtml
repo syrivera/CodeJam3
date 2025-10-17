@@ -7,9 +7,18 @@
     var currentPage = (int)(ViewData["Page"] ?? 1);
     var totalPages = (int)(ViewData["TotalPages"] ?? 1);
     var totalCount = (int)(ViewData["TotalCount"] ?? 0);
+    var username = ViewData["Username"] as string ?? "Guest";
+    var userId = ViewData["UserId"] as string ?? "";
 }
 
-<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="/profile" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Welcome @username
+   
+    </div>
+
+
+
     <h1 class="mb-4">Movie Dashboard</h1>
 
     <!-- Search Bar -->
