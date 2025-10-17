@@ -10,7 +10,7 @@ namespace CodeJam3b.Models.Lists
         // Primary key is a uuid
         [Key]
         [Column("id")]
-        public required Guid Id { get; set; }
+        public required string Id { get; set; }
 
         [Column("fav_id")]
         public string? FavId { get; set; }

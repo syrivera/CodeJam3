@@ -1,0 +1,37 @@
+﻿@using CodeJam3b.Models.Movies
+@model List<Movie>
+
+@{
+    var q = ViewData["Query"] as string ?? "";
+    var pages = (int)ViewData["Page"];
+    var totalPages = (int)ViewData["TotalPages"];
+}
+
+<h1>Dashboard</h1>
+
+Dashboard
+    <input type="text" name="q" value="@q" placeholder="Search movies..." />
+    <button type="submit">Search</button>
+</form>
+
+<p>Query: @q</p>
+<p>Page @pages of @totalPages</p>
+
+<ul>
+@foreach (var item in Model)
+{
+    <li>@item.Name</li>
+}
+</ul>
+
+<div>
+    @if (page > 1)
+    {
+        @Url.Action(Previous</a>
+    }
+
+    @if (page < totalPages)
+    {
+        <a hreftion(Next</a>
+    }
+</div>
