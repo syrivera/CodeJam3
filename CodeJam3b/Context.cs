@@ -3,6 +3,9 @@ using CodeJam3b.Models.Movies;
 using CodeJam3b.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+
+using CodeJam3b.Models.Users;
+using CodeJam3b.Models.Lists;
 namespace CodeJam3b.Models.Movies;
 
 
@@ -24,7 +27,8 @@ public class LetterBoxDbContext(string dbName = "letterbox") : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql($"Host={_connectionHost};Database={_connectionDbName}");
+        optionsBuilder.UseNpgsql(connectionString:
+            "Server=localhost;Port=5432;User Id=postgres;Password=root;Database=letterbox;Include Error Detail=true;");
         base.OnConfiguring(optionsBuilder);
     }
 }

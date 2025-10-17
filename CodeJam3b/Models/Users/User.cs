@@ -10,7 +10,7 @@ namespace CodeJam3b.Models.Users
         // Primary key: user_id (uuid)
         [Key]
         [Column("user_id")]
-        public required Guid UserId { get; set; }
+        public required string UserId { get; set; }
 
         // external/string identifier
         [Column("id")]
@@ -29,7 +29,7 @@ namespace CodeJam3b.Models.Users
         public string? WatchedId { get; set; }
 
         [Column("list_id")]
-        public Guid? ListId { get; set; }
+        public string? ListId { get; set; }
 
         [Column("watchlist_id")]
         public string? WatchlistId { get; set; }

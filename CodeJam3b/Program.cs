@@ -5,21 +5,32 @@ using Microsoft.EntityFrameworkCore;
 
 public static class Program
 {
-    public static void Main()
+    public static void Main(string[] args)
     {
-        using (var db = new LetterBoxDbContext())
+        var builder = WebApplication.CreateBuilder(args);
+
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+        builder.Services.AddDbContext<LetterBoxDbContext>(); // Register our DbContext for dependency injection
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
         {
-            if (!db.Database.CanConnect())
-            {
-                Console.WriteLine("Could not connect to database.");
-                return;
-            }
-
-            Console.WriteLine("Connected to database.");
-            Console.WriteLine($"Movies: {db.Movies.Count()}, Users: {db.Users.Count()}");
+            app.UseExceptionHandler("/Home/Error");
         }
+        app.UseStaticFiles();
 
-        RunCli();
+        app.UseRouting();
+
+        app.UseAuthorization();
+
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+
+        app.Run();
     }
 
     static void RunCli()
@@ -47,10 +58,10 @@ public static class Program
                 case "list_users":
                     ListUsers();
                     break;
-                case "get_user":
-                    if (input.Length >= 2) GetUserById(input[1]);
-                    else Console.WriteLine("Usage: get_user <user_id>");
-                    break;
+                //case "get_user":
+                //    if (input.Length >= 2) GetUserById(input[1]);
+                //    else Console.WriteLine("Usage: get_user <user_id>");
+                //    break;
                 case "add_movie":
                     // add_movie <id> <name> <releaseYear> <genre> <durationMins> <avgRating>
                     if (input.Length >= 7)
@@ -114,34 +125,34 @@ public static class Program
         }
     }
 
-    static void GetUserById(string userId)
-    {
-        using (var db = new LetterBoxDbContext())
-        {
-            // userId here is the string 'id' column or the GUID user_id? We'll try matching both.
-            CodeJam3b.Models.Users.User? user = null;
-            if (Guid.TryParse(userId, out var guid))
-            {
-                user = db.Users.FirstOrDefault(u => u.UserId == guid);
-            }
-            if (user == null)
-            {
-                user = db.Users.FirstOrDefault(u => u.Id == userId);
-            }
+    //static void GetUserById(string userId)
+    //{
+    //    using (var db = new LetterBoxDbContext())
+    //    {
+    //        // userId here is the string 'id' column or the GUID user_id? We'll try matching both.
+    //        CodeJam3b.Models.Users.User? user = null;
+    //        if (Guid.TryParse(userId, out var guid))
+    //        {
+    //            user = db.Users.FirstOrDefault(u => u.UserId == guid);
+    //        }
+    //        if (user == null)
+    //        {
+    //            user = db.Users.FirstOrDefault(u => u.Id == userId);
+    //        }
 
-            if (user == null)
-            {
-                Console.WriteLine("User not found.");
-                return;
-            }
+    //        if (user == null)
+    //        {
+    //            Console.WriteLine("User not found.");
+    //            return;
+    //        }
 
-            Console.WriteLine($"UserId: {user.UserId}");
-            Console.WriteLine($"Id: {user.Id}");
-            Console.WriteLine($"Username: {user.Username}");
-            Console.WriteLine($"Email: {user.Email}");
-            Console.WriteLine($"Bio: {user.Bio}");
-        }
-    }
+    //        Console.WriteLine($"UserId: {user.UserId}");
+    //        Console.WriteLine($"Id: {user.Id}");
+    //        Console.WriteLine($"Username: {user.Username}");
+    //        Console.WriteLine($"Email: {user.Email}");
+    //        Console.WriteLine($"Bio: {user.Bio}");
+    //    }
+    //}
 
     static void AddMovie(string id, string name, string releaseYearRaw, string genre, string durationRaw, string avgRaw)
     {
