@@ -28,7 +28,7 @@ namespace CodeJam3b.Models.Movies
 
         // rating_id is a uuid referencing Ratings.id
         [Column("rating_id")]
-        public Guid? RatingId { get; set; }
+        public string? RatingId { get; set; }
         public Rating? Rating { get; set; }
     }
 }
