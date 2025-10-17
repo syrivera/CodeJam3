@@ -56,6 +56,10 @@ Count movies:
 ```sql
 SELECT COUNT(*) FROM movies;
 ```
+![e4200603-3756-48e2-b6c0-a7fd42243483](https://github.com/user-attachments/assets/dd29d815-2c28-4f08-ad05-2c29867e4cb6)
+
+
+
 
 ## Usage
 - Browse movies, users, ratings, watchlists, favorites, diaries.
