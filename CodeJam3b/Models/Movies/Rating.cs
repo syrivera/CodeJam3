@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CodeJam3b.Models.Movies
 {
     [Table("ratings")]
+
+    //Again, this looks good
     public class Rating
     {
         // Primary key: id (uuid)

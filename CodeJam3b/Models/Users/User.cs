@@ -38,5 +38,7 @@ namespace CodeJam3b.Models.Users
         //public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
         //public CodeJam3b.Models.Lists.Watched? Watched { get; set; }
         //public CodeJam3b.Models.Lists.Diary? Diary { get; set; }
+
+        //Looks good here, I like all the foreign key references
     }
 }

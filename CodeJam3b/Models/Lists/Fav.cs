@@ -15,6 +15,8 @@ namespace CodeJam3b.Models.Lists
         [Column("fav_id")]
         public required string FavId { get; set; }
 
+        //What is the difference between id and fav_id? Is fav_id a foriegn key?
+
         [Column("movie_id")]
         public string? MovieId { get; set; }
         public CodeJam3b.Models.Movies.Movie? Movie { get; set; }
