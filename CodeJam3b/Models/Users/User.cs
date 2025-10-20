@@ -26,7 +26,7 @@ namespace CodeJam3b.Models.Users
         public string? WatchedId { get; set; }
 
         [Column("list_id")]
-        public string? ListId { get; set; }
+        public string? ListId { get; set; } 
 
         [Column("watchlist_id")]
         public string? WatchlistId { get; set; }

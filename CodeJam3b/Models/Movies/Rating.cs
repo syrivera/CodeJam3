@@ -13,7 +13,7 @@ namespace CodeJam3b.Models.Movies
         public required string Id { get; set; }
 
         [Column("rating_id")]
-        public required string RatingId { get; set; }
+        public required string RatingId { get; set; } // why both id and ratingid
 
         [Column("user_id")]
         public string? UserId { get; set; }

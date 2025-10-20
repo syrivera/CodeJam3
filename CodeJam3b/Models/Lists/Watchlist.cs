@@ -14,7 +14,7 @@ namespace CodeJam3b.Models.Lists
         public required string Id { get; set; }
 
         [Column("watchlist_id")]
-        public required string WatchlistId { get; set; }
+        public required string WatchlistId { get; set; } // yup, id and watchlistid
 
         [Column("movie_id")]
         public string? MovieId { get; set; }
