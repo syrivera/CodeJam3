@@ -14,6 +14,7 @@ ASP.NET Core web app for tracking movies, users, ratings, and lists. Uses Postgr
 1. Make sure PostgreSQL is running and the database `letterbox` exists.
 2. Restore packages, apply migrations, build, and run:
 	```powershell
+ 	dotnet ef migrations add InitialData
 	dotnet ef database update
 	dotnet build
 	dotnet run OR dotnet watch
