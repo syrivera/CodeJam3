@@ -34,6 +34,14 @@ namespace CodeJam3b.Models.Users
         [Column("diary_id")]
         public string? DiaryId { get; set; }
 
+
+        // Add the fav_id column so we can establish relationship between users => watched => fav
+
+        // [Column("fav_id)]
+        // [ForeignKey("watched")]
+        // public string fav_id { get; set; }
+
+
         // Navigation properties (optional)
         //public CodeJam3b.Models.Lists.Watchlist? Watchlist { get; set; }
         //public CodeJam3b.Models.Lists.Watched? Watched { get; set; }

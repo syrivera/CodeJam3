@@ -477,10 +477,6 @@ namespace CodeJam3b.Migrations
 
             modelBuilder.Entity("CodeJam3b.Models.Movies.Rating", b =>
                 {
-                    b.Property<string>("RatingId")
-                        .HasColumnType("text")
-                        .HasColumnName("rating_id");
-
                     b.Property<string>("Id")
                         .HasColumnType("text")
                         .HasColumnName("id");
@@ -506,7 +502,7 @@ namespace CodeJam3b.Migrations
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
-                    b.HasKey("RatingId");
+                    b.HasKey("Id");
 
                     b.HasIndex("UserId");
 

@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CodeJam3b.Migrations
 {
     [DbContext(typeof(LetterBoxDbContext))]
-    [Migration("20251017192240_SeedInitialData")]
-    partial class SeedInitialData
+    [Migration("20251020153017_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

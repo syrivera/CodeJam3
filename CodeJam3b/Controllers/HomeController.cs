@@ -101,6 +101,9 @@ namespace LetterBoxDb.Controllers
             return View(movie);
         }
 
+        // - This route combines both the add to favorites functionality and the submit review.
+        // - Should separate the two so a user can access each one individually
+        // - This method also has the logic for marking a movie as watched, this could be a separate method as well
         [HttpPost]
         [Route("/movie/{id}/submit")]
         public IActionResult SubmitReview(string id, int rating, string? review, bool isFavorite = false)
@@ -149,6 +152,10 @@ namespace LetterBoxDb.Controllers
             _db.Ratings.Add(newRating);
 
             // ✅ Add to favorites if selected
+
+            // The user table does not have a "fav_id" column in the EntityFramework model, but it is shown on the ERD
+            // Need to implement the logic to tie users to their favorite movies
+
             if (isFavorite)
             {
                 var watched = _db.Watched.FirstOrDefault(w => w.UserId == userId);
@@ -181,6 +188,7 @@ namespace LetterBoxDb.Controllers
                     }
                 }
             }
+
             var lastRatingWatched = _db.Watched
                .OrderByDescending(r => r.Id)
                .FirstOrDefault();
@@ -199,7 +207,13 @@ namespace LetterBoxDb.Controllers
             var newWatched = new Watched
             {
                 Id = nextWatchedId,
-                FavId = _db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).First(),
+
+                // Consider adding "FirstOrDefault()" instead of First() - consistent with rest of file and better error handling
+                // This FavId setter will not work unless the column was added as a foreign key to the users table
+
+                FavId = _db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).FirstOrDefault(), // Always NULL
+
+                // FavId = _db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).First(), 
                 UserId = userId,
                 MovieId = id,
                 DiaryId = id
