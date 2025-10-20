@@ -28,7 +28,7 @@ ASP.NET Core web app for tracking movies, users, ratings, and lists. Uses Postgr
 - Dashboard: Overview of movies, users, ratings, lists
 - AllTables: Raw data from all tables
 - Login: Log in as a demo user
-  	- (AVAILABLE USERS: "moviebuff123", "cinephile", "filmfanatic)
+  	- (AVAILABLE USERS: "moviebuff123", "cinephile", "filmfanatic")
 - Profile: View user details and lists
 - Movie: See details and ratings for a movie
 
