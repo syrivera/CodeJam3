@@ -5,6 +5,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace CodeJam3b.Models.Movies
 {
     [Table("movies")]
+
+    //This looks great, and is structured well
     public class Movie
     {
         [Key]

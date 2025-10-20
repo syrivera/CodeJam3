@@ -22,6 +22,9 @@ namespace LetterBoxDb.Controllers
         {
             return RedirectToAction("Login");
         }
+
+        //I like this to automatically force the user to login
+        //before they can do anything else, that's great.
         
         [Route("/login")]
         public IActionResult Login(string name)
@@ -63,6 +66,11 @@ namespace LetterBoxDb.Controllers
                     .OrderByDescending(m => EF.Functions.ILike(m.Name!, $"{q}%"))
                     .ThenBy(m => m.Name);
             }
+
+            /* In the above query you order desc by name, but since the movie IDs are also listed
+             it might be clearer if you don't include the ids, or if you do then order by those 
+            (so it is 1-8).*/
+
             else
             {
                 query = query.OrderBy(m => m.Name!);
@@ -100,6 +108,9 @@ namespace LetterBoxDb.Controllers
             ViewData["Title"] = movie.Name;
             return View(movie);
         }
+
+        //This functionality is great, I like how you keep it simple and only check for 
+        //the movie based on the id, then grab all the information. Well done!
 
         [HttpPost]
         [Route("/movie/{id}/submit")]
@@ -148,6 +159,10 @@ namespace LetterBoxDb.Controllers
 
             _db.Ratings.Add(newRating);
 
+            //I like this functionality to add ratings, could there be a way inside your profile
+            //view to also see the ratings you've given? For ex
+            //var ratings = _db.Ratings.Where(r => r.UserId == userId).ToList();
+            
             // ✅ Add to favorites if selected
             if (isFavorite)
             {
@@ -177,7 +192,14 @@ namespace LetterBoxDb.Controllers
                         };
 
                         _db.Fav.Add(fav);
-                        
+
+                        /*
+                         I'm not sure if this functionality entirely works, I tried to add 2 favorites
+                        and ran into a duplicate pk error for "pk_watched". Also, when I add a favorite
+                        movie it does not show up in my profile page under favorites. Could this maybe be
+                        because the FavId is not being set correctly in the Watched table?
+                         */
+
                     }
                 }
             }
@@ -235,6 +257,12 @@ namespace LetterBoxDb.Controllers
             var favs = _db.Fav.Where(f => f.FavId == watched.FavId).ToList().Select(w => _db.Movies.FirstOrDefault(m => m.Id == w.MovieId).Name)
                 .Where(m => m != null)
                 .ToList();
+
+            //I'm not sure if the above query works, I added a movie as a favorite and then it did not appear under my profile.
+            //Could it be because of the relation between favorite and watched?
+
+            //This could also be where you add the ratings and actually output them over just the list of movies they watched
+            //var ratings = _db.Ratings.Where(r => r.UserId == userId).ToList();
 
             ViewData["Username"] = username;
             ViewData["Watched"] = alreadyWatched;
