@@ -13,7 +13,7 @@ namespace CodeJam3b.Models.Lists
         public required string Id { get; set; }
 
         [Column("fav_id")]
-        public required string FavId { get; set; }
+        public required string FavId { get; set; } // why both id and favid
 
         [Column("movie_id")]
         public string? MovieId { get; set; }

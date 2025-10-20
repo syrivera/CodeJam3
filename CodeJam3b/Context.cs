@@ -7,6 +7,7 @@ namespace CodeJam3b.Models.Movies;
 
 public class LetterBoxDbContext(string dbName = "letterbox") : DbContext
 {
+    // dont think these are being used
     private readonly string _connectionHost = "localhost";
     private readonly string _connectionDbName = dbName;
 
@@ -21,6 +22,7 @@ public class LetterBoxDbContext(string dbName = "letterbox") : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        // maybe dont hardcode credentials (I probably did too lol)
         optionsBuilder.UseNpgsql(connectionString:
             "Server=localhost;Port=5432;User Id=postgres;Password=root;Database=letterbox;Include Error Detail=true;");
         base.OnConfiguring(optionsBuilder);

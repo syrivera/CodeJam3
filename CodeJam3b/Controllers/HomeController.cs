@@ -26,6 +26,7 @@ namespace LetterBoxDb.Controllers
         [Route("/login")]
         public IActionResult Login(string name)
         {
+            // could split this into GET and POST
             var user = _db.Users.FirstOrDefault(u => u.Username == name);
 
             if (user != null)
@@ -54,6 +55,7 @@ namespace LetterBoxDb.Controllers
             q = (q ?? string.Empty).Trim();
             page = page < 1 ? 1 : page;
 
+            // asNoTracking good for performance very nice
             IQueryable<Movie> query = _db.Movies.AsNoTracking();
 
             if (!string.IsNullOrEmpty(q))
@@ -120,6 +122,8 @@ namespace LetterBoxDb.Controllers
             }
 
             // ✅ Get the last Rating ID (string like "rating-001") and increment
+            // this ID generation stuff could be put in a helper method
+            // might have issues if two people submit at same time
             var lastRating = _db.Ratings
                 .OrderByDescending(r => r.Id)
                 .FirstOrDefault();
@@ -139,7 +143,7 @@ namespace LetterBoxDb.Controllers
             var newRating = new Rating
             {
                 Id = nextRatingId,
-                RatingId = nextRatingId,
+                RatingId = nextRatingId, 
                 UserId = userId,
                 MovieName = movie.Name!,
                 Review = review,
@@ -202,9 +206,10 @@ namespace LetterBoxDb.Controllers
                 FavId = _db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).First(),
                 UserId = userId,
                 MovieId = id,
-                DiaryId = id
+                DiaryId = id 
             };
             Console.WriteLine(_db.Watched.Where(w => w.UserId == userId).Select(w => w.FavId).FirstOrDefault());
+            // leftover debug code?
 
             _db.Watched.Add(newWatched);
 
@@ -228,6 +233,7 @@ namespace LetterBoxDb.Controllers
                 return View();
             }
 
+            // doing FirstOrDefault inside the select is slower (thanks chat)
             var alreadyWatched = _db.Watched.Where(w => w.UserId == userId).ToList().Select(w => _db.Movies.FirstOrDefault(m => m.Id == w.MovieId).Name)
                 .Where(m => m != null)
                 .ToList();
